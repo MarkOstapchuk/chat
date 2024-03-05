@@ -1,0 +1,9 @@
+.chat {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  @apply  bg-body-bg h-dvh;
+}
+.scroll {
+  @apply overflow-scroll;
+  flex-grow: 1;
+}
