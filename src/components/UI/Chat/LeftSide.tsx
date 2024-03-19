@@ -4,12 +4,12 @@ import React from 'react'
 
 import DialogList from '@/components/UI/Chat/DialogList'
 
-import { IDialogResponse } from '@/types/dialog.types'
+import { INamedDialog } from '@/types/dialog.types'
 
 import { DASHBOARD_PAGES } from '@/config/pages-url.config'
 
 interface props {
-  dialogs?: IDialogResponse[]
+  dialogs?: INamedDialog[]
 }
 const LeftSide = ({ dialogs }: props) => {
   return (

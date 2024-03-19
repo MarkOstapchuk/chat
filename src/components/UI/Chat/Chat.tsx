@@ -3,9 +3,6 @@
 import React, { useState } from 'react'
 
 import LeftSide from '@/components/UI/Chat/LeftSide'
-import Loader from '@/components/UI/Loader'
-
-import { IDialogResponse } from '@/types/dialog.types'
 
 import { useProfile } from '@/hooks/useProfile'
 
@@ -17,7 +14,6 @@ const Chat = ({
   children: React.ReactNode
 }>) => {
   const { data, isLoading } = useProfile()
-
   // if (isLoading) return <Loader />
   return (
     <div className={styles.chat}>

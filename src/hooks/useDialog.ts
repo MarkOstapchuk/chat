@@ -1,19 +1,40 @@
+import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Socket } from 'socket.io-client'
+import { Socket, io } from 'socket.io-client'
 
 import { IMessage, IMessagePost } from '@/types/message.types'
 
-export const useDialog = (socket: Socket, chatId: string) => {
-  const [messages, setMessages] = useState<IMessage[]>()
+import { CHAT_CONFIG } from '@/config/chat.config'
 
+import { dialogService } from '@/services/dialog.service'
+
+let socket: Socket
+export const useDialog = (chatId: string) => {
+  const [messages, setMessages] = useState<IMessage[]>()
+  const { data, isLoading } = useQuery({
+    queryKey: ['dialog', chatId],
+    queryFn: () => {
+      return dialogService.getDialog(chatId)
+    }
+  })
+  if (!socket) {
+    socket = io(
+      CHAT_CONFIG.SERVER_URL
+      //   , {
+      //   query: {
+      //     chatId
+      //   }
+      // }
+    )
+  }
   useEffect(() => {
     // получение сообщений
-    socket.on('messages:chat', (messages: IMessage[]) => {
+    socket.on('messages', (messages: IMessage[]) => {
       console.log('received', messages)
       setMessages(messages)
     })
     socket.emit('chat:join', chatId)
-    socket.emit('messages:chat:get', { chatId })
+    socket.emit('messages:get', { chatId })
     return function () {
       socket.emit('chat:leave', chatId)
     }
@@ -51,5 +72,5 @@ export const useDialog = (socket: Socket, chatId: string) => {
     []
   )
 
-  return { messages, chatActions }
+  return { data, messages, chatActions }
 }

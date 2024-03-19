@@ -8,22 +8,19 @@ import { useState } from 'react'
 import Loader from '@/components/UI/Loader'
 
 import { useChat } from '@/hooks/useChat'
+import { useDialog } from '@/hooks/useDialog'
+import { useProfile } from '@/hooks/useProfile'
 
 import { dialogService } from '@/services/dialog.service'
 
 const Dialog = ({ params }: { params: { id: string } }) => {
-  const { data, isLoading } = useQuery({
-    queryKey: ['dialog', params.id],
-    queryFn: () => {
-      return dialogService.getDialog(params.id)
-    }
-  })
-  const { messages, log, chatActions, userData } = useChat(params.id)
+  const { data, isLoading } = useProfile()
+  const { messages, chatActions } = useDialog(params.id)
   const [sendMessageValue, setSendMessageValue] = useState('')
   const sendMessage = () => {
-    if (data && userData) {
+    if (data && data) {
       const message = {
-        senderId: userData.id,
+        senderId: data.id,
         dialogId: data.id,
         text: sendMessageValue
       }
@@ -31,7 +28,7 @@ const Dialog = ({ params }: { params: { id: string } }) => {
       setSendMessageValue('')
     }
   }
-  if (isLoading || !userData || !data) return <Loader />
+  if (isLoading || !data || !data) return <Loader />
   return (
     <div className={'h-dvh'}>
       <div className={'flex flex-col justify-center w-full h-full'}>
@@ -46,7 +43,7 @@ const Dialog = ({ params }: { params: { id: string } }) => {
                   key={item.id}
                   className={clsx(
                     'py-2 px-2 bg-white mb-5 rounded-2xl',
-                    item.senderId === userData.id && 'bg-blue-600'
+                    item.senderId === data.id && 'bg-blue-600'
                   )}
                 >
                   <p>{item.text}</p>

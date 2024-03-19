@@ -5,14 +5,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 
-import { IDialogResponse } from '@/types/dialog.types'
+import { INamedDialog } from '@/types/dialog.types'
 
 import { DASHBOARD_PAGES } from '@/config/pages-url.config'
 
 import styles from '@/app/chat.module.scss'
 
 interface props {
-  dialogs: IDialogResponse[]
+  dialogs: INamedDialog[]
 }
 
 const DialogList = ({ dialogs }: props) => {
@@ -25,7 +25,7 @@ const DialogList = ({ dialogs }: props) => {
     <div className={styles.scroll}>
       {dialogs.map((item) => (
         <Link
-          href={DASHBOARD_PAGES.HOME + '/' + item.id}
+          href={DASHBOARD_PAGES.HOME + '/' + item.dialogId}
           key={item.id}
         >
           <div
@@ -34,7 +34,7 @@ const DialogList = ({ dialogs }: props) => {
               pathname == `/chat/${item.id}` ? 'bg-blue-400' : 'bg-white'
             )}
           >
-            {!item.pictureUrl && (
+            {!item.dialog.pictureUrl && (
               <Image
                 src={'/user-round.svg'}
                 width='80'
@@ -50,10 +50,10 @@ const DialogList = ({ dialogs }: props) => {
             >
               <p className={'text-xs'}>{item.name}</p>
               <p className={'text-xxs font-medium text-gray-600'}>
-                {item.lastMessage}
+                {item.dialog.lastMessage}
               </p>
               <p className={'absolute top-0 right-2 text-xxs'}>
-                {item.sentTime && getDateTime(item.sentTime)}
+                {item.dialog.sentTime && getDateTime(item.dialog.sentTime)}
               </p>
             </div>
           </div>
