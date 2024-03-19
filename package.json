@@ -23,8 +23,7 @@
     "react-hook-form": "^7.50.1",
     "react-hot-toast": "^2.4.1",
     "sass": "^1.71.1",
-    "socket.io-client": "^4.7.4",
-    "sonner": "^1.4.3"
+    "socket.io-client": "^4.7.4"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",

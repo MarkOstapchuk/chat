@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+import { toast } from 'react-hot-toast'
 
 import { FormError } from '@/components/UI/Errors/FormError'
 

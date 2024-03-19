@@ -18,7 +18,7 @@ const Chat = ({
 }>) => {
   const { data, isLoading } = useProfile()
 
-  if (isLoading) return <Loader />
+  // if (isLoading) return <Loader />
   return (
     <div className={styles.chat}>
       <LeftSide dialogs={data?.dialogs} />
