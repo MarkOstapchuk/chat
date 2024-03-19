@@ -4,6 +4,6 @@
   @apply  bg-body-bg h-dvh;
 }
 .scroll {
-  @apply overflow-scroll;
+  @apply overflow-y-scroll;
   flex-grow: 1;
 }

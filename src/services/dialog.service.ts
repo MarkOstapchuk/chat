@@ -11,8 +11,8 @@ class DialogService {
     )
     return response.data
   }
-  async createDialog(ids: Array<{ id: number }>) {
-    const data = { users_id: ids }
+  async createDialog(users: Array<{ userId: number; name: string }>) {
+    const data = { users }
     const response = await axiosWithAuth.post<IDialogResponse>(
       this.BASE_URL,
       data

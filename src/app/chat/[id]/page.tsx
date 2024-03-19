@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { clsx } from 'clsx'
 import { Paperclip, SendHorizonal } from 'lucide-react'
-import { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import Loader from '@/components/UI/Loader'
 
@@ -20,6 +20,14 @@ const Dialog = ({ params }: { params: { id: string } }) => {
   })
   const { messages, log, chatActions, userData } = useChat(params.id)
   const [sendMessageValue, setSendMessageValue] = useState('')
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    ref.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end'
+    })
+  }, [messages, userData, isLoading])
+  console.log(data)
   const sendMessage = () => {
     if (data && userData) {
       const message = {
@@ -38,20 +46,27 @@ const Dialog = ({ params }: { params: { id: string } }) => {
         <div className={'py-4 px-2 border-b-2 border-border '}>
           Dialog {data.name}
         </div>
-        <div className={'flex-grow overflow-scroll p-4'}>
-          {!messages || messages.length == 0
-            ? 'no messages'
-            : messages.map((item) => (
+        <div className={'flex-grow overflow-y-scroll p-4 flex flex-col'}>
+          {!messages || messages.length == 0 ? (
+            <div className={'m-auto'}>No messages...</div>
+          ) : (
+            messages.map((item) => {
+              return (
                 <div
                   key={item.id}
                   className={clsx(
-                    'py-2 px-2 bg-white mb-5 rounded-2xl',
-                    item.senderId === userData.id && 'bg-blue-600'
+                    'py-4 px-3 mb-2 bg-gradient-to-r text-wrap break-words rounded-xl w-30p text-xxs',
+                    item.senderId === userData.id
+                      ? 'bg-pink-300 ml-auto'
+                      : 'bg-white mr-auto from-gray-300 to-blue-200'
                   )}
                 >
                   <p>{item.text}</p>
                 </div>
-              ))}
+              )
+            })
+          )}
+          <div ref={ref} />
         </div>
         <div className={'h-16 border-border border-t-2 pl-2 pr-5'}>
           <div className={'w-full h-full flex items-center'}>

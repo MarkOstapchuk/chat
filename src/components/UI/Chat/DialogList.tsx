@@ -20,21 +20,20 @@ const DialogList = ({ dialogs }: props) => {
   const getDateTime = (date: Date) => {
     return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
   }
-
   return (
     <div className={styles.scroll}>
       {dialogs.map((item) => (
         <Link
-          href={DASHBOARD_PAGES.HOME + '/' + item.id}
+          href={DASHBOARD_PAGES.HOME + '/' + item.dialogId}
           key={item.id}
         >
           <div
             className={clsx(
               'w-full p-2 h-20 border-b-2 flex items-center cursor-default',
-              pathname == `/chat/${item.id}` ? 'bg-blue-400' : 'bg-white'
+              pathname == `/chat/${item.id}` ? 'bg-primary-2' : 'bg-white'
             )}
           >
-            {!item.pictureUrl && (
+            {!item.dialog.pictureUrl && (
               <Image
                 src={'/user-round.svg'}
                 width='80'
@@ -50,10 +49,10 @@ const DialogList = ({ dialogs }: props) => {
             >
               <p className={'text-xs'}>{item.name}</p>
               <p className={'text-xxs font-medium text-gray-600'}>
-                {item.lastMessage}
+                {item.dialog.lastMessage}
               </p>
               <p className={'absolute top-0 right-2 text-xxs'}>
-                {item.sentTime && getDateTime(item.sentTime)}
+                {item.dialog.sentTime && getDateTime(item.dialog.sentTime)}
               </p>
             </div>
           </div>

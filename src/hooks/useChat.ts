@@ -28,12 +28,10 @@ export const useChat = (chatId: string) => {
     // подключение/отключение пользователя
     socket.on('log', (log: string) => {
       setLog(log)
-      console.log(log)
     })
 
     // получение сообщений
     socket.on('messages', (messages: IMessage[]) => {
-      console.log('received', messages)
       setMessages(messages)
     })
     socket.emit('chat:join', chatId)

@@ -11,12 +11,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'body-bg': '#E2E0DB',
+        'body-bg': '#eee',
         bg: '#fff',
         text: '#000',
         border: '#73716C',
-        primary: '#239DFF',
-        secondary: '#07FF1A'
+        primary: '#FB92FF',
+        'primary-2': '#FF8DD8',
+        secondary: '#B279FF'
       },
       spacing: {
         '0.5': '0.12rem',

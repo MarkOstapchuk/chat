@@ -1,9 +1,16 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { Toaster, toast } from 'react-hot-toast'
 
+import { IAuthForm } from '@/types/auth.types'
+
+import { DASHBOARD_PAGES } from '@/config/pages-url.config'
+
+import { AuthService } from '@/services/auth.service'
 import { dialogService } from '@/services/dialog.service'
 import { userService } from '@/services/user.service'
 
@@ -21,19 +28,34 @@ const AllUsers = ({
       else return userService.findUsers(username)
     }
   })
+  const { mutate, isError } = useMutation({
+    mutationKey: ['createDialog'],
+    mutationFn: (data: { userId: number; name: string }) =>
+      dialogService.createDialog([data]),
+    onSuccess() {
+      toast.success('Successfully added!')
+      router.push('/')
+    }
+  })
   const router = useRouter()
-  console.log(router)
-  const createDialog = async (id: number) => {
-    await dialogService.createDialog([{ id }])
-    router.push('/')
+  const createDialog = async (data: { userId: number; name: string }) => {
+    mutate(data, {
+      onError(error: Error) {
+        const axiosError = error as AxiosError
+        const errorData: { error: string; message: string } = axiosError
+          ?.response?.data as { error: string; message: string }
+        toast.error(errorData.message)
+      }
+    })
   }
-
   return (
-    <div>
-      {data &&
+    <div className={'overflow-y-scroll flex-grow'}>
+      {data?.length ? (
         data.map((item) => (
           <div
-            onClick={() => createDialog(item.id)}
+            onClick={() =>
+              createDialog({ userId: item.id, name: item.username })
+            }
             key={item.id}
             className={
               'w-full border-b-2 p-3 mb-2 bg-white flex items-center cursor-default'
@@ -55,7 +77,10 @@ const AllUsers = ({
               </p>
             </div>
           </div>
-        ))}
+        ))
+      ) : (
+        <div className={'p-4'}>No users found</div>
+      )}
     </div>
   )
 }

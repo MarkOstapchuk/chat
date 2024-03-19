@@ -1,10 +1,12 @@
 'use client'
 
 import { useMutation } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+import { Toaster } from 'react-hot-toast'
+import { toast } from 'react-hot-toast'
 
 import { FormError } from '@/components/UI/Errors/FormError'
 
@@ -28,7 +30,7 @@ const SignUpForm = ({ setLoginHandler }: Props) => {
     mode: 'onChange'
   })
   const { push } = useRouter()
-  const { mutate } = useMutation({
+  const { mutate, isError } = useMutation({
     mutationKey: ['auth'],
     mutationFn: (data: IAuthForm) => AuthService.main('register', data),
     onSuccess() {
@@ -39,11 +41,19 @@ const SignUpForm = ({ setLoginHandler }: Props) => {
   })
 
   const onSubmit: SubmitHandler<IAuthForm> = (data) => {
-    mutate(data)
+    mutate(data, {
+      onError(error: Error) {
+        const axiosError = error as AxiosError
+        const errorData: { error: string; message: string } = axiosError
+          ?.response?.data as { error: string; message: string }
+        toast.error(errorData.message)
+      }
+    })
   }
 
   return (
     <div className={styles.form}>
+      <Toaster />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className='mb-4'>
           <label

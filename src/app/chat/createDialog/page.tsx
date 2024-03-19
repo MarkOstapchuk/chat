@@ -12,7 +12,7 @@ const addDialog = () => {
 
   const debounceOnChange = debounce((value) => setUsernameInput(value), 400)
   return (
-    <div>
+    <div className={'flex flex-col h-dvh'}>
       <h1 className={'p-2 border-b-2 border-border text-xl font-medium'}>
         AddDialog
       </h1>

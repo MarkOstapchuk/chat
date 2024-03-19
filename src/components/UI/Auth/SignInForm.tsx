@@ -1,12 +1,13 @@
 import { useMutation } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+import { Toaster, toast } from 'react-hot-toast'
 
 import { FormError } from '@/components/UI/Errors/FormError'
 
-import { IAuthForm, ILoginForm } from '@/types/auth.types'
+import { ILoginForm } from '@/types/auth.types'
 
 import { DASHBOARD_PAGES } from '@/config/pages-url.config'
 
@@ -36,10 +37,18 @@ const SignInForm = ({ setLoginHandler }: Props) => {
     }
   })
   const onSubmit: SubmitHandler<ILoginForm> = (data) => {
-    mutate(data)
+    mutate(data, {
+      onError(error: Error) {
+        const axiosError = error as AxiosError
+        const errorData: { error: string; message: string } = axiosError
+          ?.response?.data as { error: string; message: string }
+        toast.error(errorData.message)
+      }
+    })
   }
   return (
     <div className={styles.form}>
+      <Toaster />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className='mb-4'>
           <label
