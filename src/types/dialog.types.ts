@@ -20,3 +20,6 @@ export interface IDialogWithMessages extends IDialog {
 export interface IDialogMessageResponse extends INamedDialog {
   dialog: IDialogWithMessages
 }
+export interface IDialogWithNamed extends IDialog {
+  named_dialogs: INamedDialog[]
+}

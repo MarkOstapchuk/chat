@@ -11,7 +11,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'body-bg': '#E2E0DB',
+        'body-bg': '#eee',
         bg: '#fff',
         text: '#000',
         border: '#73716C',

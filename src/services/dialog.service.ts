@@ -1,4 +1,8 @@
-import { IDialogMessageResponse, IDialogResponse } from '@/types/dialog.types'
+import {
+  IDialog,
+  IDialogMessageResponse,
+  IDialogWithNamed
+} from '@/types/dialog.types'
 import { IProfileResponse } from '@/types/user.types'
 
 import { axiosWithAuth } from '@/api/interceptors'
@@ -6,17 +10,14 @@ import { axiosWithAuth } from '@/api/interceptors'
 class DialogService {
   private BASE_URL = '/dialog'
   async getDialog(id: string) {
-    const response = await axiosWithAuth.get<IDialogMessageResponse>(
+    const response = await axiosWithAuth.get<IDialogWithNamed>(
       this.BASE_URL + `/${id}`
     )
     return response.data
   }
   async createDialog(ids: Array<{ id: number }>) {
     const data = { users_id: ids }
-    const response = await axiosWithAuth.post<IDialogResponse>(
-      this.BASE_URL,
-      data
-    )
+    const response = await axiosWithAuth.post<IDialog>(this.BASE_URL, data)
     return response.data
   }
 }

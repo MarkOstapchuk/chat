@@ -1,39 +1,49 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
 import { clsx } from 'clsx'
 import { Paperclip, SendHorizonal } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import Loader from '@/components/UI/Loader'
 
-import { useChat } from '@/hooks/useChat'
 import { useDialog } from '@/hooks/useDialog'
 import { useProfile } from '@/hooks/useProfile'
 
-import { dialogService } from '@/services/dialog.service'
-
 const Dialog = ({ params }: { params: { id: string } }) => {
-  const { data, isLoading } = useProfile()
-  const { messages, chatActions } = useDialog(params.id)
+  const userData = useProfile()
+  const { data, isLoading, messages, chatActions } = useDialog(params.id)
   const [sendMessageValue, setSendMessageValue] = useState('')
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    ref.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end'
+    })
+  }, [messages, data, isLoading])
   const sendMessage = () => {
-    if (data && data) {
-      const message = {
-        senderId: data.id,
-        dialogId: data.id,
-        text: sendMessageValue
+    if (sendMessageValue.trim().length !== 0) {
+      if (data && userData && userData.data) {
+        const message = {
+          senderId: userData.data.id,
+          dialogId: data.id,
+          text: sendMessageValue
+        }
+        chatActions.send(message)
+        setSendMessageValue('')
       }
-      chatActions.send(message)
-      setSendMessageValue('')
     }
   }
-  if (isLoading || !data || !data) return <Loader />
+  if (isLoading || !data || !userData || userData.isLoading) return <Loader />
   return (
     <div className={'h-dvh'}>
       <div className={'flex flex-col justify-center w-full h-full'}>
         <div className={'py-4 px-2 border-b-2 border-border '}>
-          Dialog {data.name}
+          Dialog{' '}
+          {
+            data.named_dialogs.filter(
+              (item) => item.userId === userData?.data?.id
+            )[0].name
+          }
         </div>
         <div className={'flex-grow overflow-y-scroll p-4 flex flex-col'}>
           {!messages || messages.length == 0 ? (
@@ -45,7 +55,7 @@ const Dialog = ({ params }: { params: { id: string } }) => {
                   key={item.id}
                   className={clsx(
                     'py-4 px-3 mb-2 bg-gradient-to-r text-wrap break-words rounded-xl w-30p text-xxs',
-                    item.senderId === userData.id
+                    item.senderId === userData?.data?.id
                       ? 'bg-pink-300 ml-auto'
                       : 'bg-white mr-auto from-gray-300 to-blue-200'
                   )}
