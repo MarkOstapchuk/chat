@@ -1,20 +1,23 @@
 import { useContext, useEffect, useState } from 'react'
-import { Socket, io } from 'socket.io-client'
 
 import { SocketContext } from '@/components/Context/socket'
+import { ProfileStore } from '@/components/Stores/Profile.store'
 
-let socket: Socket
+import { useProfile } from '@/hooks/useProfile'
+
 export const useChat = () => {
   const socket = useContext(SocketContext)
-  const [log, setLog] = useState<string>()
 
+  const { data, isLoading } = useProfile()
+  console.log(data)
+  const setProfile = ProfileStore((state) => state.set)
+
+  //setDialogs
   useEffect(() => {
-    // подключение/отключение пользователя
-    // socket.on('log', (log: string) => {
-    //   setLog(log)
-    //   console.log(log)
-    // })
+    if (!isLoading) {
+      setProfile({ ...data })
+    }
   }, [])
 
-  return { socket, log }
+  return {}
 }

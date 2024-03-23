@@ -1,18 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { Socket, io } from 'socket.io-client'
 
 import { SocketContext } from '@/components/Context/socket'
 
 import { IMessage, IMessagePost } from '@/types/message.types'
 
-import { CHAT_CONFIG } from '@/config/chat.config'
-
 import { dialogService } from '@/services/dialog.service'
 
-let socket: Socket
 export const useDialog = (chatId: string) => {
   const socket = useContext(SocketContext)
+
   const [messages, setMessages] = useState<IMessage[]>()
   const { data, isLoading } = useQuery({
     queryKey: ['dialog', chatId],
