@@ -5,22 +5,20 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 
+import { DialogsStore } from '@/components/Stores/Dialogs.store'
+
 import { INamedDialog } from '@/types/dialog.types'
 
 import { DASHBOARD_PAGES } from '@/config/pages-url.config'
 
 import styles from '@/app/chat.module.scss'
 
-interface props {
-  dialogs: INamedDialog[]
-}
-
-const DialogList = ({ dialogs }: props) => {
+const DialogList = () => {
   const pathname = usePathname()
   const getDateTime = (date: Date) => {
     return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
   }
-
+  const dialogs = DialogsStore((state) => state.dialogs)
   return (
     <div className={styles.scroll}>
       {dialogs.map((item) => (

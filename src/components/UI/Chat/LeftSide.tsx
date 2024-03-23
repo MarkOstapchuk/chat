@@ -8,10 +8,7 @@ import { INamedDialog } from '@/types/dialog.types'
 
 import { DASHBOARD_PAGES } from '@/config/pages-url.config'
 
-interface props {
-  dialogs?: INamedDialog[]
-}
-const LeftSide = ({ dialogs }: props) => {
+const LeftSide = () => {
   return (
     <div
       className={
@@ -29,7 +26,7 @@ const LeftSide = ({ dialogs }: props) => {
           }
         />
       </div>
-      {dialogs && <DialogList dialogs={dialogs} />}
+      {<DialogList />}
       <div className={'h-16 border-t-2 border-border'}>
         <div className={'w-full h-full flex items-center justify-center'}>
           <Link href={DASHBOARD_PAGES.PROFILE}>

@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { devtools } from 'zustand/middleware'
 
 import { IUser } from '@/types/auth.types'
 
@@ -14,8 +15,10 @@ const initialState: IUser = {
   createdAt: new Date(),
   pictureUrl: ''
 }
-export const ProfileStore = create<IProfileStore>()((set) => ({
-  user: initialState,
-  set: (payload: Partial<IUser>) =>
-    set((state) => ({ user: { ...state.user, ...payload } }))
-}))
+export const ProfileStore = create<IProfileStore>()(
+  devtools((set) => ({
+    user: initialState,
+    set: (payload: Partial<IUser>) =>
+      set((state) => ({ user: { ...state.user, ...payload } }))
+  }))
+)

@@ -1,9 +1,12 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
+import { DialogsStore } from '@/components/Stores/Dialogs.store'
 import LeftSide from '@/components/UI/Chat/LeftSide'
+import Loader from '@/components/UI/Loader'
 
+import { useChat } from '@/hooks/useChat'
 import { useProfile } from '@/hooks/useProfile'
 
 import styles from '../../../app/chat.module.scss'
@@ -13,11 +16,11 @@ const Chat = ({
 }: Readonly<{
   children: React.ReactNode
 }>) => {
-  const { data, isLoading } = useProfile()
-  // if (isLoading) return <Loader />
+  useProfile()
+  useChat()
   return (
     <div className={styles.chat}>
-      <LeftSide dialogs={data?.dialogs} />
+      <LeftSide />
       <div className={''}>{children}</div>
     </div>
   )
