@@ -1,7 +1,8 @@
 import {
   IDialog,
   IDialogMessageResponse,
-  IDialogWithNamed
+  IDialogWithNamed,
+  INamedDialog
 } from '@/types/dialog.types'
 import { IProfileResponse } from '@/types/user.types'
 
@@ -15,9 +16,9 @@ class DialogService {
     )
     return response.data
   }
-  async createDialog(ids: Array<{ id: number }>) {
-    const data = { users_id: ids }
-    const response = await axiosWithAuth.post<IDialog>(this.BASE_URL, data)
+  async createDialog(users: Array<{ userId: number; name: string }>) {
+    const data = { users }
+    const response = await axiosWithAuth.post<INamedDialog>(this.BASE_URL, data)
     return response.data
   }
 }
