@@ -12,7 +12,9 @@ export const useChat = () => {
   const { data, isLoading } = useProfile()
   useEffect(() => {
     if (socket && !isLoading && data) {
-      socket.on('dialog:message', (data: IMessage) => {})
+      socket.on('dialog:message', (data: IMessage) => {
+        console.log(data)
+      })
       socket.emit('user:connect', data.id)
     }
   }, [data, isLoading])

@@ -26,7 +26,7 @@ const SignInForm = ({ setLoginHandler }: Props) => {
   } = useForm<ILoginForm>({
     mode: 'onChange'
   })
-  const { push } = useRouter()
+  const { push, refresh } = useRouter()
   const { mutate } = useMutation({
     mutationKey: ['auth'],
     mutationFn: (data: ILoginForm) => AuthService.main('login', data),
@@ -34,6 +34,7 @@ const SignInForm = ({ setLoginHandler }: Props) => {
       toast.success('Successfully login!')
       reset()
       push(DASHBOARD_PAGES.HOME)
+      refresh()
     }
   })
   const onSubmit: SubmitHandler<ILoginForm> = (data) => {
