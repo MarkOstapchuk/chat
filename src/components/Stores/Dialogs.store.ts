@@ -1,14 +1,15 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
-import { INamedDialog } from '@/types/dialog.types'
+import '@/types/dialog.types'
+import { IDialogParticipant } from '@/types/dialog.types'
 
 interface IProfileStore {
-  dialogs: INamedDialog[]
-  setOne: (payload: INamedDialog) => void
-  setMany: (payload: INamedDialog[]) => void
+  dialogs: IDialogParticipant[]
+  setOne: (payload: IDialogParticipant) => void
+  setMany: (payload: IDialogParticipant[]) => void
 }
-const initialState: INamedDialog[] = [
+const initialState: IDialogParticipant[] = [
   // {
   //   id: 0,
   //   name: '',
@@ -27,9 +28,9 @@ const initialState: INamedDialog[] = [
 export const DialogsStore = create<IProfileStore>()(
   devtools((set) => ({
     dialogs: initialState,
-    setOne: (payload: INamedDialog) =>
+    setOne: (payload: IDialogParticipant) =>
       set((state) => ({ dialogs: [...state.dialogs, payload] })),
-    setMany: (payload: INamedDialog[]) =>
+    setMany: (payload: IDialogParticipant[]) =>
       set((state) => ({ dialogs: [...payload] }))
   }))
 )

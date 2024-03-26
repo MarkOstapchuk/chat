@@ -1,25 +1,24 @@
 import { IUser } from '@/types/auth.types'
 import { IMessage } from '@/types/message.types'
 
-export interface INamedDialog {
-  id: number
+export interface IDialogParticipant {
   name: string
+  pictureUrl?: string
   dialogId: number
   userId: number
   dialog: IDialog
 }
 export interface IDialog {
   id: number
-  pictureUrl: string | null
-  lastMessage: string | null
-  sentTime: Date | null
+  name?: string
+  pictureUrl?: string
+  isGroup: boolean
+  lastMessage?: string
+  sentTime: Date
 }
-export interface IDialogWithMessages extends IDialog {
+export interface IDialogWithParticipants extends IDialog {
+  dialog_participants: IDialogParticipant[]
+}
+export interface IDialogWithMessages extends IDialogWithParticipants {
   messages: IMessage[]
-}
-export interface IDialogMessageResponse extends INamedDialog {
-  dialog: IDialogWithMessages
-}
-export interface IDialogWithNamed extends IDialog {
-  named_dialogs: INamedDialog[]
 }

@@ -1,6 +1,8 @@
 import { IUser } from '@/types/auth.types'
-import { INamedDialog } from '@/types/dialog.types'
+import { IDialogParticipant } from '@/types/dialog.types'
+import { IMessage } from '@/types/message.types'
 
 export interface IProfileResponse extends IUser {
-  dialogs: INamedDialog[]
+  dialog_participant: IDialogParticipant[]
+  message: IMessage[]
 }

@@ -3,11 +3,9 @@
 import { clsx } from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 import { DialogsStore } from '@/components/Stores/Dialogs.store'
-
-import { INamedDialog } from '@/types/dialog.types'
 
 import { DASHBOARD_PAGES } from '@/config/pages-url.config'
 
@@ -24,12 +22,12 @@ const DialogList = () => {
       {dialogs.map((item) => (
         <Link
           href={DASHBOARD_PAGES.HOME + '/' + item.dialogId}
-          key={item.id}
+          key={item.dialog.id}
         >
           <div
             className={clsx(
               'w-full p-2 h-20 border-b-2 flex items-center cursor-default',
-              pathname == `/chat/${item.id}` ? 'bg-blue-400' : 'bg-white'
+              pathname == `/chat/${item.dialog.id}` ? 'bg-blue-400' : 'bg-white'
             )}
           >
             {!item.dialog.pictureUrl && (
@@ -50,6 +48,15 @@ const DialogList = () => {
               <p className={'text-xxs font-medium text-gray-600'}>
                 {item.dialog.lastMessage}
               </p>
+              {/*{item.unreadCount > 0 && (*/}
+              {/*  <p*/}
+              {/*    className={*/}
+              {/*      'absolute right-0 top-30 text-xxs rounded-full w-6 h-6 p-2 flex items-center justify-center bg-blue-300'*/}
+              {/*    }*/}
+              {/*  >*/}
+              {/*    {item.unreadCount}*/}
+              {/*  </p>*/}
+              {/*)}*/}
               <p className={'absolute top-0 right-2 text-xxs'}>
                 {item.dialog.sentTime && getDateTime(item.dialog.sentTime)}
               </p>

@@ -15,7 +15,7 @@ export function useProfile() {
   const setProfile = ProfileStore((state) => state.set)
   useEffect(() => {
     if (data && !isLoading) {
-      setMany(data.dialogs)
+      setMany(data.dialog_participant)
       setProfile({ ...data })
     }
   }, [data, isLoading])

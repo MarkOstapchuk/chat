@@ -10,7 +10,6 @@ export const AuthService = {
       `/auth/${type}`,
       data
     )
-    console.log(response)
     if (response.data.accessToken) saveTokenStorage(response.data.accessToken)
     return response
   },

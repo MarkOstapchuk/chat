@@ -4,15 +4,21 @@ import { clsx } from 'clsx'
 import { Paperclip, SendHorizonal } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 
+import { ProfileStore } from '@/components/Stores/Profile.store'
 import Loader from '@/components/UI/Loader'
+
+import { IUser } from '@/types/auth.types'
 
 import { useDialog } from '@/hooks/useDialog'
 import { useProfile } from '@/hooks/useProfile'
 
 const Dialog = ({ params }: { params: { id: string } }) => {
-  const userData = useProfile()
+  const userData = ProfileStore((state) => state.user)
+  //надо заменить на profileStore
   const { data, isLoading, messages, chatActions } = useDialog(params.id)
+
   const [sendMessageValue, setSendMessageValue] = useState('')
+
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     ref.current?.scrollIntoView({
@@ -20,50 +26,50 @@ const Dialog = ({ params }: { params: { id: string } }) => {
       block: 'end'
     })
   }, [messages, data, isLoading])
+  console.log(data)
   const sendMessage = () => {
     if (sendMessageValue.trim().length !== 0) {
-      if (data && userData && userData.data) {
+      if (data && userData) {
         const message = {
-          senderId: userData.data.id,
+          senderId: userData.id,
           dialogId: data.id,
           text: sendMessageValue
         }
-        chatActions.send(message)
+        const usersId = data.dialog_participants.map((item) => item.userId)
+        chatActions.send({ message, usersId })
         setSendMessageValue('')
       }
     }
   }
-  if (isLoading || !data || !userData || userData.isLoading) return <Loader />
+
+  if (isLoading || !data || !userData) return <Loader />
   return (
     <div className={'h-dvh'}>
       <div className={'flex flex-col justify-center w-full h-full'}>
         <div className={'py-4 px-2 border-b-2 border-border '}>
-          Dialog{' '}
-          {
-            data.named_dialogs.filter(
-              (item) => item.userId === userData?.data?.id
-            )[0].name
-          }
+          {data.dialog_participants[0].name}
         </div>
         <div className={'flex-grow overflow-y-scroll p-4 flex flex-col'}>
           {!messages || messages.length == 0 ? (
             <div className={'m-auto'}>No messages...</div>
           ) : (
-            messages.map((item) => {
-              return (
-                <div
-                  key={item.id}
-                  className={clsx(
-                    'py-4 px-3 mb-2 bg-gradient-to-r text-wrap break-words rounded-xl w-30p text-xxs',
-                    item.senderId === userData?.data?.id
-                      ? 'bg-pink-300 ml-auto'
-                      : 'bg-white mr-auto from-gray-300 to-blue-200'
-                  )}
-                >
-                  <p>{item.text}</p>
-                </div>
-              )
-            })
+            <>
+              {messages.map((item, index) => {
+                return (
+                  <div
+                    key={item.id}
+                    className={clsx(
+                      'py-4 px-3 mb-2 bg-gradient-to-r text-wrap break-words rounded-xl w-30p text-xxs',
+                      item.senderId === userData?.id
+                        ? 'bg-pink-300 ml-auto'
+                        : 'bg-white mr-auto from-gray-300 to-blue-200'
+                    )}
+                  >
+                    <p>{item.text}</p>
+                  </div>
+                )
+              })}
+            </>
           )}
           <div ref={ref} />
         </div>

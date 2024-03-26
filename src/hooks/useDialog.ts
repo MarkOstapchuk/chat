@@ -5,11 +5,13 @@ import { SocketContext } from '@/components/Context/socket'
 
 import { IMessage, IMessagePost } from '@/types/message.types'
 
+import { useProfile } from '@/hooks/useProfile'
+
 import { dialogService } from '@/services/dialog.service'
 
 export const useDialog = (chatId: string) => {
   const socket = useContext(SocketContext)
-
+  const profile = useProfile()
   const [messages, setMessages] = useState<IMessage[]>()
   const { data, isLoading } = useQuery({
     queryKey: ['dialog', chatId],
@@ -21,24 +23,33 @@ export const useDialog = (chatId: string) => {
   useEffect(() => {
     if (socket) {
       socket.on('messages', (messages: IMessage[]) => {
-        console.log('received', messages)
         setMessages(messages)
       })
-      socket.emit('chat:join', chatId)
-      socket.emit('messages:get', { chatId })
-      return function () {
-        socket.emit('chat:leave', chatId)
+      if (profile.data && !profile.isLoading) {
+        socket.emit('messages:get', {
+          chatId: +chatId,
+          userId: profile.data.id
+        })
       }
+      if (data) readAllMessages({ chatId: data.id })
+      return function () {}
     }
-  }, [])
+  }, [profile.data, profile.isLoading, data])
 
   // отправка сообщения
-  const send = useCallback((payload: IMessagePost) => {
+  const send = useCallback(
+    (payload: { message: IMessagePost; usersId: number[] }) => {
+      if (socket) {
+        socket.emit('message:post', payload)
+      }
+    },
+    []
+  )
+  const readAllMessages = useCallback((payload: { chatId: number }) => {
     if (socket) {
-      socket.emit('message:post', payload)
+      socket.emit('messages:readall', payload)
     }
   }, [])
-
   // обновление сообщения
   const update = useCallback((text: { text: string }) => {
     if (socket) {

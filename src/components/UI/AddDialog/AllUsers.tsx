@@ -26,7 +26,7 @@ const AllUsers = ({
   const { mutate, isError } = useMutation({
     mutationKey: ['createDialog'],
     mutationFn: (data: { userId: number; name: string }) =>
-      dialogService.createDialog([data]),
+      dialogService.createDialog(data),
     onSuccess() {
       toast.success('Successfully added!')
       router.push('/')
