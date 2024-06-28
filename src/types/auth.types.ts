@@ -15,6 +15,7 @@ export interface IUser {
   username: string
   createdAt: Date
   pictureUrl?: string
+  online: boolean
 }
 
 export interface IAuthResponse {

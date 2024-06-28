@@ -21,10 +21,18 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='en'>
+    <html
+      lang='en'
+      suppressHydrationWarning
+    >
       <body className={inter.className}>
         <Providers>
-          <Toaster />
+          <Toaster
+            toastOptions={{
+              className:
+                'dark:bg-bg-dark dark:text-text-dark dark:border-dark-third dark:border-0.5'
+            }}
+          />
           {children}
         </Providers>
       </body>

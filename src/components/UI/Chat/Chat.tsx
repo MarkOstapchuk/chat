@@ -1,9 +1,10 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import { DialogsStore } from '@/components/Stores/Dialogs.store'
 import LeftSide from '@/components/UI/Chat/LeftSide'
+import MemoizedLeftSide from '@/components/UI/Chat/MemoLeftSide'
 import Loader from '@/components/UI/Loader'
 
 import { useChat } from '@/hooks/useChat'
@@ -18,10 +19,14 @@ const Chat = ({
 }>) => {
   useProfile()
   useChat()
+  const MemoizedChildren = useMemo(
+    () => <div className={'dark:bg-bg-dark'}>{children}</div>,
+    [children]
+  )
   return (
     <div className={styles.chat}>
-      <LeftSide />
-      <div className={''}>{children}</div>
+      <MemoizedLeftSide />
+      {MemoizedChildren}
     </div>
   )
 }

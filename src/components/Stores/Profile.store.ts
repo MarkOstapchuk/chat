@@ -10,6 +10,7 @@ interface IProfileStore {
 const initialState: IUser = {
   id: 0,
   name: '',
+  online: true,
   email: '',
   username: '',
   createdAt: new Date(),

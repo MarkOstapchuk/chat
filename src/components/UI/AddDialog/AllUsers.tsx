@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
+import { clsx } from 'clsx'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Toaster, toast } from 'react-hot-toast'
@@ -33,7 +34,11 @@ const AllUsers = ({
     }
   })
   const router = useRouter()
-  const createDialog = async (data: { userId: number; name: string }) => {
+  const createDialog = async (data: {
+    userId: number
+    name: string
+    pictureUrl?: string
+  }) => {
     mutate(data, {
       onError(error: Error) {
         const axiosError = error as AxiosError
@@ -49,32 +54,43 @@ const AllUsers = ({
         data.map((item) => (
           <div
             onClick={() =>
-              createDialog({ userId: item.id, name: item.username })
+              createDialog({
+                userId: item.id,
+                name: item.username,
+                pictureUrl: item.pictureUrl
+              })
             }
             key={item.id}
             className={
-              'w-full border-b-2 p-3 mb-2 bg-white flex items-center cursor-default'
+              'w-full border-b-2 p-3 dark:p-2 mb-2 bg-white dark:bg-transparent dark:border-b-0.25 ' +
+              'dark:border-bg-dark-secondary flex items-center cursor-default'
             }
           >
-            {!item.pictureUrl && (
+            <div className={'h-12 w-12 relative flex-none'}>
               <Image
-                src={'/user-round.svg'}
-                width='80'
-                height='80'
+                src={clsx(
+                  item.pictureUrl
+                    ? userService.getPicture(item.pictureUrl)
+                    : '/user-round.svg'
+                )}
+                fill
+                sizes='48px'
                 alt={'picture'}
-                className={'rounded-full border-2'}
+                className={'rounded-full border-2 dark:border-1'}
               ></Image>
-            )}
+            </div>
             <div className={'flex flex-col ml-3'}>
-              {item.name && <p>{item.name}</p>}
-              <p className={'text-xs text-gray-600'}>
+              {item.name && (
+                <p className={'dark:text-text-dark'}>{item.name}</p>
+              )}
+              <p className={'text-xs text-gray-600 dark:text-text-dark'}>
                 username: {item.username}
               </p>
             </div>
           </div>
         ))
       ) : (
-        <div className={'p-4'}>No users found</div>
+        <div className={'p-4 dark:text-white'}>No users found</div>
       )}
     </div>
   )

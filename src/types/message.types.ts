@@ -4,6 +4,8 @@ export enum Status {
   READ
 }
 
+export type Type = 'TEXT' | 'IMAGE' | 'FILE'
+
 export interface IMessage {
   id: number
   senderId: number
@@ -12,10 +14,11 @@ export interface IMessage {
   createdAt: Date
   unreadById: number[]
   status: Status
+  type: Type
 }
 
 export interface IMessagePost {
   senderId: number
   dialogId: number
-  text: string
+  text?: string
 }
