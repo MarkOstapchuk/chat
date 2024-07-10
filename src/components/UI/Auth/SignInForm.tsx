@@ -26,7 +26,7 @@ const SignInForm = ({ setLoginHandler }: Props) => {
   } = useForm<ILoginForm>({
     mode: 'onChange'
   })
-  const { push } = useRouter()
+  const { push, refresh } = useRouter()
   const { mutate } = useMutation({
     mutationKey: ['auth'],
     mutationFn: (data: ILoginForm) => AuthService.main('login', data),
@@ -34,6 +34,7 @@ const SignInForm = ({ setLoginHandler }: Props) => {
       toast.success('Successfully login!')
       reset()
       push(DASHBOARD_PAGES.HOME)
+      refresh()
     }
   })
   const onSubmit: SubmitHandler<ILoginForm> = (data) => {
@@ -48,16 +49,21 @@ const SignInForm = ({ setLoginHandler }: Props) => {
   }
   return (
     <div className={styles.form}>
-      <Toaster />
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className={'dark:bg-bg-dark'}
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div className='mb-4'>
           <label
-            className='block text-gray-700 text-sm font-bold mb-2'
+            className='block text-gray-700 text-sm font-bold mb-2 dark:text-text-dark'
             htmlFor='username'
           >
             Username or email
           </label>
           <input
+            className={
+              'dark:text-text-dark dark:bg-bg-dark-secondary dark:border-none'
+            }
             {...register('username', {
               required: {
                 value: true,
@@ -75,12 +81,15 @@ const SignInForm = ({ setLoginHandler }: Props) => {
         </div>
         <div className='mb-6'>
           <label
-            className='block text-gray-700 text-sm font-bold mb-2'
+            className='block text-gray-700 text-sm font-bold mb-2 dark:text-text-dark'
             htmlFor='password'
           >
             Password
           </label>
           <input
+            className={
+              'dark:text-text-dark dark:bg-bg-dark-secondary dark:border-none'
+            }
             {...register('password', {
               required: {
                 value: true,
@@ -105,7 +114,7 @@ const SignInForm = ({ setLoginHandler }: Props) => {
         </div>
         <div className='mb-6'>
           <label
-            className='block text-gray-700 text-sm font-bold mb-2'
+            className='block text-gray-700 text-sm font-bold mb-2 dark:text-text-dark'
             htmlFor='password'
           >
             Repeat Password
@@ -113,6 +122,7 @@ const SignInForm = ({ setLoginHandler }: Props) => {
         </div>
         <div className='flex items-center justify-between'>
           <input
+            className={'dark:bg-dark-primary bg-blue-500 dark:border-none'}
             value={'Sign In'}
             type='submit'
           ></input>
@@ -122,7 +132,7 @@ const SignInForm = ({ setLoginHandler }: Props) => {
             </span>
             <button
               className='inline-block align-baseline font-bold text-sm text-blue-500
-                hover:text-blue-800'
+                hover:text-blue-800 dark:text-dark-primary dark:hover:text-dark-secondary'
               onClick={setLoginHandler}
             >
               Sign Up

@@ -5,7 +5,6 @@ import { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { Toaster } from 'react-hot-toast'
 import { toast } from 'react-hot-toast'
 
 import { FormError } from '@/components/UI/Errors/FormError'
@@ -53,11 +52,13 @@ const SignUpForm = ({ setLoginHandler }: Props) => {
 
   return (
     <div className={styles.form}>
-      <Toaster />
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className='mb-4'>
+      <form
+        className={'dark:bg-bg-dark'}
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className='mb-4 '>
           <label
-            className='block text-gray-700 text-sm font-bold mb-2'
+            className='block text-gray-700 text-sm font-bold mb-2 dark:text-text-dark'
             htmlFor='username'
           >
             Username
@@ -73,6 +74,9 @@ const SignUpForm = ({ setLoginHandler }: Props) => {
             id='username'
             type='text'
             placeholder='Username'
+            className={
+              'dark:text-text-dark dark:bg-bg-dark-secondary dark:border-none'
+            }
           />
           {errors?.username?.message && (
             <FormError message={errors.username.message} />
@@ -80,7 +84,7 @@ const SignUpForm = ({ setLoginHandler }: Props) => {
         </div>
         <div className='mb-6'>
           <label
-            className='block text-gray-700 text-sm font-bold mb-2'
+            className='block text-gray-700 text-sm font-bold mb-2 dark:text-text-dark'
             htmlFor='username'
           >
             Email
@@ -99,6 +103,9 @@ const SignUpForm = ({ setLoginHandler }: Props) => {
             id='email'
             type='text'
             placeholder='Email'
+            className={
+              'dark:text-text-dark dark:bg-bg-dark-secondary dark:border-none'
+            }
           />
           {errors?.email?.message && (
             <FormError message={errors.email.message} />
@@ -106,7 +113,7 @@ const SignUpForm = ({ setLoginHandler }: Props) => {
         </div>
         <div className='mb-6'>
           <label
-            className='block text-gray-700 text-sm font-bold mb-2'
+            className='block text-gray-700 text-sm font-bold mb-2 dark:text-text-dark'
             htmlFor='password'
           >
             Password
@@ -129,6 +136,9 @@ const SignUpForm = ({ setLoginHandler }: Props) => {
             id='password'
             type='password'
             placeholder='******************'
+            className={
+              'dark:text-text-dark dark:bg-bg-dark-secondary dark:border-none'
+            }
           />
           {errors?.password?.message && (
             <FormError message={errors.password.message} />
@@ -136,7 +146,7 @@ const SignUpForm = ({ setLoginHandler }: Props) => {
         </div>
         <div className='mb-6'>
           <label
-            className='block text-gray-700 text-sm font-bold mb-2'
+            className='block text-gray-700 text-sm font-bold mb-2 dark:text-text-dark'
             htmlFor='password'
           >
             Repeat Password
@@ -159,6 +169,9 @@ const SignUpForm = ({ setLoginHandler }: Props) => {
             id='secondpassword'
             type='password'
             placeholder='******************'
+            className={
+              'dark:text-text-dark dark:bg-bg-dark-secondary dark:border-none'
+            }
           />
           {errors?.secondPassword?.message && (
             <FormError message={errors.secondPassword.message} />
@@ -168,6 +181,7 @@ const SignUpForm = ({ setLoginHandler }: Props) => {
           <input
             value={'Sign Up'}
             type='submit'
+            className={'dark:bg-dark-primary bg-blue-500 dark:border-none'}
           ></input>
           <div className={'flex items-center'}>
             <span className={'text-gray-400 text-xxs mr-1'}>
@@ -175,7 +189,7 @@ const SignUpForm = ({ setLoginHandler }: Props) => {
             </span>
             <button
               className='inline-block align-baseline font-bold text-sm text-blue-500
-                hover:text-blue-800'
+                hover:text-blue-800 dark:text-dark-primary dark:hover:text-dark-secondary'
               onClick={setLoginHandler}
             >
               Sign In

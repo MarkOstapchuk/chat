@@ -1,77 +1,40 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Socket, io } from 'socket.io-client'
+'use client'
 
-import { IMessage, IMessagePost } from '@/types/message.types'
+import { useContext, useEffect, useRef, useState } from 'react'
 
-import { CHAT_CONFIG } from '@/config/chat.config'
+import { SocketContext } from '@/components/Context/socket'
+import { DialogsStore } from '@/components/Stores/Dialogs.store'
+
+import { IMessage } from '@/types/message.types'
 
 import { useProfile } from '@/hooks/useProfile'
 
-let socket: Socket
-export const useChat = (chatId: string) => {
+export const useChat = () => {
+  const socket = useContext(SocketContext)
   const { data, isLoading } = useProfile()
-
-  if (!socket && data) {
-    socket = io(
-      CHAT_CONFIG.SERVER_URL
-      //   , {
-      //   query: {
-      //     chatId
-      //   }
-      // }
-    )
-  }
-  const [messages, setMessages] = useState<IMessage[]>()
-  const [log, setLog] = useState<string>()
+  const addNotification = DialogsStore((state) => state.addNotification)
+  const isHandlerSet = useRef(false)
 
   useEffect(() => {
-    // подключение/отключение пользователя
-    socket.on('log', (log: string) => {
-      setLog(log)
-    })
-
-    // получение сообщений
-    socket.on('messages', (messages: IMessage[]) => {
-      setMessages(messages)
-    })
-    socket.emit('chat:join', chatId)
-    socket.emit('messages:get', { chatId })
-    return function () {
-      socket.emit('chat:leave', chatId)
+    if (socket && data && !isLoading && !isHandlerSet.current) {
+      socket.emit('user:connect', data.id)
+      socket.on('dialog:notification', (message: IMessage) => {
+        addNotification({ message, dialogId: message.dialogId })
+      })
+      isHandlerSet.current = true
     }
-  }, [])
+    const handleBeforeUnload = () => {
+      if (socket && data && !isLoading) {
+        socket.emit('user:disconnect', data.id)
+      }
+    }
 
-  // отправка сообщения
-  const send = useCallback((payload: IMessagePost) => {
-    socket.emit('message:post', payload)
-  }, [])
+    window.addEventListener('beforeunload', handleBeforeUnload)
 
-  // обновление сообщения
-  const update = useCallback((text: { text: string }) => {
-    socket.emit('message:put', text)
-  }, [])
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [socket, data, isLoading])
 
-  // удаление сообщения
-  const remove = useCallback((id: number) => {
-    socket.emit('message:delete', id)
-  }, [])
-
-  // очистка сообщения - для отладки при разработке
-  // можно вызывать в консоли браузера, например
-  // window.clearMessages = useCallback(() => {
-  //   socket.emit('messages:clear')
-  //   location.reload()
-  // }, [])
-
-  // операции
-  const chatActions = useMemo(
-    () => ({
-      send,
-      update,
-      remove
-    }),
-    []
-  )
-
-  return { messages, log, chatActions, userData: data }
+  return {}
 }
