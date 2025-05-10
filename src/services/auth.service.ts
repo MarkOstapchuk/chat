@@ -1,8 +1,13 @@
-import { IAuthForm, IAuthResponse, ILoginForm } from '@/types/auth.types'
+import { IAuthForm, IAuthResponse, ILoginForm } from '@/types/auth.types';
 
-import { axiosClassic } from '@/api/interceptors'
 
-import { saveTokenStorage } from '@/services/authToken.service'
+
+import { axiosClassic } from '@/api/interceptors';
+
+
+
+import { saveTokenStorage } from '@/services/authToken.service';
+
 
 export const AuthService = {
   async main(type: 'login' | 'register', data: IAuthForm | ILoginForm) {
@@ -22,7 +27,6 @@ export const AuthService = {
     return response
   },
   async logout() {
-    const response = await axiosClassic.post<boolean>('/auth/logout')
-    return response
+    return await axiosClassic.post<boolean>('/auth/logout')
   }
 }
